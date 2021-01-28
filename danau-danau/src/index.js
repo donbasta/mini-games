@@ -4,44 +4,72 @@ import './index.css';
 // import App from './App';
 
 function Square(props) {
-    return (
-        <button 
-            className="square" 
-            onClick={props.onClick}
-        >
-            {props.value}
-        </button>
-    );
+    switch(props.value) {
+        case 'W':
+            return (
+                <button 
+                    className="square-water"
+                    onClick={props.onClick}
+                >
+                </button>
+            );
+        case 'P':
+            return (
+                <button 
+                    className="square-protected"
+                    onClick={props.onClick}
+                >
+                </button>
+            );
+        default:
+            return (
+                <button 
+                    className="square"
+                    onClick={props.onClick}
+                >
+                    {props.value}
+                </button>
+            );
+    }
 }
 
 class Board extends React.Component {
-    renderSquare(i) {
+    renderSquare(i, j) {
         return (
             <Square 
-                value={this.props.squares[i]} 
-                onClick={() => this.props.onClick(i)}
+                value={this.props.squares[i][j]} 
+                onClick={() => this.props.onClick(i, j)}
             />
         );
     }
 
     render() {
+        const squares = this.props.squares;
+        console.log(squares)
+        const rows = squares.length;
+        const cols = squares[0].length;
+        const expandRow = (indexRow) => {
+            let ret = [];
+            for (let i = 0; i < cols; i++) {
+                ret.push(this.renderSquare(indexRow, i));
+            }
+            return ret;
+        };
+        const processRow = () => {
+            let ret = [];
+            for (let i = 0; i < rows; i++) {
+                ret.push(
+                    <div key={i} className="board-row">
+                        {expandRow(i)}
+                    </div>
+                );
+            }
+            return ret;
+        }
+
         return (
             <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
+                {processRow()}
             </div>
         );
     }
@@ -52,96 +80,132 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(9).fill(null),
+                squares: generateBoard(),
             }],
             stepNumber: 0,
-            xIsNext: true,
+            firstPlayerTurn: true,
         };
+        console.log("init", this.state.history[0].squares);
     }
 
-    jumpTo(step) {
+    undo() {
         this.setState({
-            stepNumber: step,
-            xIsNext: (step % 2) === 0,
+            stepNumber: Math.max(0, this.stepNumber - 1),
+            firstPlayerTurn: !this.state.firstPlayerTurn,
         })
     }
 
-    handleClick(i) {
+    handleClick(i, j) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
-        if (calculateWinner(squares) || squares[i]) {
+        const firstPlayerTurn = this.state.firstPlayerTurn;
+        if (noMoreMoves(squares, firstPlayerTurn) || squares[i][j]) {
             return;
         }
-        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        squares[i][j] = this.state.firstPlayerTurn ? 0 : 1;
         this.setState({
             history: history.concat([{
                 squares: squares,
             }]),
             stepNumber: history.length,
-            xIsNext: !this.state.xIsNext,
+            firstPlayerTurn: !this.state.firstPlayerTurn,
         });
     }
 
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
+        const firstPlayerTurn = this.state.firstPlayerTurn;
+        const gameEnds = noMoreMoves(current.squares, firstPlayerTurn);
 
-        const moves = history.map((step, move) => {
-            const desc = move ? 
-                'Go to move # ' + move :
-                'Go to game start';
-            return (
-                <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>
-                        {desc}
-                    </button>
-                </li>
-            );
-        })
-
-        let status;
-        if (winner) {
-            status = 'Winner: ' + winner;
-        } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        let status = '';
+        if (gameEnds) {
+            status = 'Player ' + (firstPlayerTurn ? 'second' : 'first') + ' wins!';
         }
         return (
             <div className="game">
                 <div className="game-board">
                     <Board
                         squares={current.squares}
-                        onClick={(i) => this.handleClick(i)}
+                        onClick={(i, j) => this.handleClick(i, j)}
                     />
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <button onClick={() => this.undo()}>
+                        Undo
+                    </button>
                 </div>
             </div>
         );
     }
 }
 
-function calculateWinner(squares) {
-    const lines = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-        if (squares[a] && squares[a] === squares[b] && squares[b] === squares[c]) {
-            return squares[a];
+function noMoreMoves(board, firstPlayer) {
+    const rows = board.length;
+    const cols = board[0].length;
+    const dx = [1, -1, 0, 0];
+    const dy = [0, 0, 1, -1];
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            if (!board[i][j]) {
+                let adaAir = false;
+                let adaTetanggaMusuh = false;
+                for (let k = 0; k < 4; k++) {
+                    const ni = i + dx[k];
+                    const nj = j + dy[k];
+                    if (ni >= 0 && ni < rows && nj >= 0 && nj < cols) {
+                        adaAir |= (board[ni][nj] === 'W');
+                        adaTetanggaMusuh |= (board[ni][nj] === (firstPlayer ? 1 : 0));
+                    }
+                } 
+                if (adaAir && !adaTetanggaMusuh) {
+                    return true;
+                }
+            }
         }
     }
-    return null;
+    return false;
+}
+
+function generateBoard(rows = 10, cols = 10) {
+    const c1 = 0.05;
+    const c2 = 0.1;
+    let board = Array(rows).fill(Array(cols).fill(null));
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            const rand = Math.random();
+            if (rand < c1) {
+                board[i][j] = 'W';
+            }
+        }
+    }
+    console.log("lul", board);
+    const dx = [1, -1, 0, 0];
+    const dy = [0, 0, 1, -1];
+    for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+            if (!board[i][j]) {
+                let flag = false;
+                for (let k = 0; k < 4; k++) {
+                    const ni = i + dx[k];
+                    const nj = j + dy[k];
+                    if (ni >= 0 && ni < rows && nj >= 0 && nj < cols) {
+                        flag |= (board[i][j] === 'W');
+                    }
+                }
+                if (flag) {
+                    const rand = Math.random();
+                    if (rand < c2) {
+                        board[i][j] = 'P';
+                    }
+                }
+            }
+        }
+    }
+    console.log("boardo", board)
+    return board;
 }
 
 ReactDOM.render(
