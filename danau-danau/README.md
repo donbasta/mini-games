@@ -8,8 +8,8 @@ Head to the following [page](insertlinkhere) to find analysis about the game.
 
 ## To do list
 
-* Implement function to disable choosing board that has a neighbor owned by opponent
 * Implement main menu
+* Implement pop-up when someone wins, or when someone pick invalid square
 * Choose Player Name
 * Choose Player Color --> RGB (?)
 * Implement Undo
