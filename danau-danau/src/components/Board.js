@@ -6,7 +6,7 @@ function Square(props) {
         case 'W':
             return (
                 <button 
-                    className="square-water"
+                    className="square water"
                     onClick={props.onClick}
                 >
                 </button>
@@ -14,7 +14,7 @@ function Square(props) {
         case 'P':
             return (
                 <button 
-                    className="square-protected"
+                    className="square protected"
                     onClick={props.onClick}
                 >
                 </button>
