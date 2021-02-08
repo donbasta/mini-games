@@ -36,6 +36,36 @@ ol, ul {
     outline: none;
 }
 
+.square-water {
+    background: rgb(17, 60, 153);
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+}
+
+.square-protected {
+    background: rgb(145, 10, 10);
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 34px;
+    height: 34px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 34px;
+}
+
 .kbd-navigation .square:focus {
     background: #ddd;
 }
