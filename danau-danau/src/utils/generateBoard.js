@@ -1,4 +1,4 @@
-function generateBoard(rows = 30, cols = 30) {
+function generateBoard(rows = 10, cols = 10) {
     const c1 = 0.3;
     const c2 = 0.1;
     const board = Array(rows);
