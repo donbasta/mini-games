@@ -19,6 +19,22 @@ function Square(props) {
                 >
                 </button>
             );
+        case 0:
+            return (
+                <button
+                    className="square player-1"
+                    onClick={props.onClick}
+                >
+                </button>
+            )
+        case 1:
+            return (
+                <button
+                    className="square player-2"
+                    onClick={props.onClick}
+                >
+                </button>
+            )
         default:
             return (
                 <button 

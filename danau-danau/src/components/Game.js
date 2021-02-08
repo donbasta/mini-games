@@ -28,7 +28,7 @@ class Game extends React.Component {
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         const firstPlayerTurn = this.state.firstPlayerTurn;
-        if (noMoreMoves(squares, firstPlayerTurn) || squares[i][j]) {
+        if (noMoreMoves(squares, firstPlayerTurn) || (squares[i][j] != null)) {
             return;
         }
         squares[i][j] = this.state.firstPlayerTurn ? 0 : 1;
@@ -50,6 +50,8 @@ class Game extends React.Component {
         let status = '';
         if (gameEnds) {
             status = 'Player ' + (firstPlayerTurn ? 'second' : 'first') + ' wins!';
+        } else {
+            status = 'Player ' + (firstPlayerTurn ? 'first' : 'second') + ', it\'s your turn!';
         }
         return (
             <div className="game">
