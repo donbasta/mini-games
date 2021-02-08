@@ -2,6 +2,7 @@ import React from 'react';
 import Board from './Board.js';
 import generateBoard from '../utils/generateBoard.js';
 import noMoreMoves from '../utils/noMoreMoves.js';
+import cannotPickSquare from '../utils/cannotPickSquare.js';
 
 class Game extends React.Component {
     constructor(props) {
@@ -28,7 +29,7 @@ class Game extends React.Component {
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         const firstPlayerTurn = this.state.firstPlayerTurn;
-        if (noMoreMoves(squares, firstPlayerTurn) || (squares[i][j] != null)) {
+        if (noMoreMoves(squares, firstPlayerTurn) || (squares[i][j] != null) || cannotPickSquare(squares, firstPlayerTurn, i, j)) {
             return;
         }
         squares[i][j] = this.state.firstPlayerTurn ? 0 : 1;
