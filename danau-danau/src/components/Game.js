@@ -15,6 +15,8 @@ class Game extends React.Component {
             stepNumber: 0,
             firstPlayerTurn: true,
             invalidMove: null,
+            isGameOver: 0,
+            winner: null,
         };
         console.log("init", this.state.history[0].squares);
     }
@@ -30,6 +32,21 @@ class Game extends React.Component {
         this.setState({
             invalidMove: ((this.state.invalidMove != null) ? null : msg),
         })
+    }
+
+    closeGameOverNotification() {
+        this.setState({
+            isGameOver: 2,
+        })
+    }
+
+    checkIsGameOver(squares, firstPlayerTurn) {
+        if (noMoreMoves(squares, firstPlayerTurn)) {
+            this.setState({
+                isGameOver: 1,
+                winner: (firstPlayerTurn ? 2 : 1),
+            })
+        }
     }
 
     handleClick(i, j) {
@@ -56,17 +73,17 @@ class Game extends React.Component {
             stepNumber: history.length,
             firstPlayerTurn: !this.state.firstPlayerTurn,
         });
+        this.checkIsGameOver(squares, this.state.firstPlayerTurn);
     }
 
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const firstPlayerTurn = this.state.firstPlayerTurn;
-        const gameEnds = noMoreMoves(current.squares, firstPlayerTurn);
 
         let status = '';
-        if (gameEnds) {
-            status = 'Player ' + (firstPlayerTurn ? 'second' : 'first') + ' wins!';
+        if (this.state.isGameOver > 0) {
+            status = 'Player ' + (this.state.winner === 2 ? 'second' : 'first') + ' wins!';
         } else {
             status = 'Player ' + (firstPlayerTurn ? 'first' : 'second') + ', it\'s your turn!';
         }
@@ -89,6 +106,13 @@ class Game extends React.Component {
                     <Notification
                         message={this.state.invalidMove}
                         closeNotification={this.toggleNotification.bind(this)}
+                    />
+                    : null
+                }
+                {this.state.isGameOver === 1 ?
+                    <Notification
+                        message={"Player " + (this.state.winner === 1 ? "first" : "second") + " wins!"}
+                        closeNotification={this.closeGameOverNotification.bind(this)}
                     />
                     : null
                 }
