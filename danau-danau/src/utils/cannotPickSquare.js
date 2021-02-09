@@ -1,4 +1,4 @@
-function cannotPickSquare(board, firstPlayer, r, c) {
+export function cannotPickSquareNeighborOpponent(board, firstPlayer, r, c) {
     const dx = [0, 0, 1, -1];
     const dy = [1, -1, 0, 0];
     const row = board.length;
@@ -15,4 +15,23 @@ function cannotPickSquare(board, firstPlayer, r, c) {
     return false;
 }
 
-export default cannotPickSquare;
+export function cannotPickSquareNoWaterNeighbor(board, r, c) {
+    const dx = [0, 0, 1, -1];
+    const dy = [1, -1, 0, 0];
+    const row = board.length;
+    const col = board[0].length;
+    let noWaterNeighbor = true;
+    for (let i = 0; i < 4; i++) {
+        const nr = r + dx[i];
+        const nc = c + dy[i];
+        if (nr >= 0 && nr < row && nc >= 0 && nc < col) {
+            if (board[nr][nc] === 'W') {
+                noWaterNeighbor = false;
+            }
+        }
+    }
+    if (noWaterNeighbor) {
+        return true;
+    }
+    return false;
+}
