@@ -37,7 +37,7 @@ function Square(props) {
         default:
             return (
                 <button 
-                    className="square"
+                    className={"square " + (props.firstPlayerTurn ? "player-1-turn" : "player-2-turn")} 
                     onClick={props.onClick}
                 >
                     {props.value}

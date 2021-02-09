@@ -38,6 +38,10 @@ ol, ul {
     outline: none;
 }
 
+.square:hover {
+    cursor: pointer;
+}
+
 .water {
     background: rgb(17, 60, 153);
 }
@@ -50,8 +54,16 @@ ol, ul {
     background: rgb(100, 100, 100);
 }
 
+.player-1-turn:hover {
+    background: rgb(167, 165, 165);
+}
+
 .player-2 {
-    background: rgb(44, 125, 9)
+    background: rgb(44, 125, 9);
+}
+
+.player-2-turn:hover {
+    background: rgb(103, 236, 45);
 }
 
 .kbd-navigation .square:focus {

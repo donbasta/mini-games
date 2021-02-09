@@ -58,6 +58,7 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
+                        firstPlayerTurn={firstPlayerTurn}
                         squares={current.squares}
                         onClick={(i, j) => this.handleClick(i, j)}
                     />
