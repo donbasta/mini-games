@@ -3,7 +3,7 @@ import Board from './Board.js';
 import Notification from './Notification.js';
 import generateBoard from '../utils/generateBoard.js';
 import noMoreMoves from '../utils/noMoreMoves.js';
-import cannotPickSquare from '../utils/cannotPickSquare.js';
+import { cannotPickSquareNeighborOpponent, cannotPickSquareNoWaterNeighbor } from '../utils/cannotPickSquare.js';
 
 class Game extends React.Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class Game extends React.Component {
             }],
             stepNumber: 0,
             firstPlayerTurn: true,
-            invalidMove: false,
+            invalidMove: null,
         };
         console.log("init", this.state.history[0].squares);
     }
@@ -26,23 +26,11 @@ class Game extends React.Component {
         })
     }
 
-    toggleNotification() {
+    toggleNotification(msg) {
         this.setState({
-            invalidMove: !this.state.invalidMove,
+            invalidMove: ((this.state.invalidMove != null) ? null : msg),
         })
     }
-
-    // showNotification() {
-    //     this.setState({
-    //         invalidMove: true,
-    //     })
-    // }
-
-    // closeNotification() {
-    //     this.setState({
-    //         invalidMove: false,
-    //     })
-    // }
 
     handleClick(i, j) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
@@ -52,8 +40,12 @@ class Game extends React.Component {
         if (noMoreMoves(squares, firstPlayerTurn) || (squares[i][j] != null)) {
             return;
         }
-        if (cannotPickSquare(squares, firstPlayerTurn, i, j)) {
-            this.toggleNotification();
+        if (cannotPickSquareNeighborOpponent(squares, firstPlayerTurn, i, j)) {
+            this.toggleNotification("You cannot choose square adjacent to opponent's one!");
+            return;
+        }
+        if (cannotPickSquareNoWaterNeighbor(squares, i, j)) {
+            this.toggleNotification("You cannot choose square with no adjacent water square!");
             return;
         }
         squares[i][j] = this.state.firstPlayerTurn ? 0 : 1;
@@ -67,7 +59,6 @@ class Game extends React.Component {
     }
 
     render() {
-        console.log(this.state.invalidMove);
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const firstPlayerTurn = this.state.firstPlayerTurn;
@@ -96,6 +87,7 @@ class Game extends React.Component {
                 </div>
                 {this.state.invalidMove ?
                     <Notification
+                        message={this.state.invalidMove}
                         closeNotification={this.toggleNotification.bind(this)}
                     />
                     : null

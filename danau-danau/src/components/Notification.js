@@ -11,7 +11,7 @@ class Notification extends React.Component {
                 <div
                     className="popup-container"
                 >
-                    You cannot choose square adjacent to opponent's one!
+                    {this.props.message}
                 </div>
             </div>
         );
