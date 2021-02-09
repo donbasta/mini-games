@@ -12,6 +12,8 @@ class Notification extends React.Component {
                     className="popup-container"
                 >
                     {this.props.message}
+                    <br />
+                    Click anywhere to close...
                 </div>
             </div>
         );
