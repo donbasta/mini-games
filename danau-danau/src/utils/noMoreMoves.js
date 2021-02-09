@@ -29,4 +29,10 @@ function noMoreMoves(board, firstPlayer) {
     return true;
 }
 
+// const B = [[null, null, null, 0, "W"],[1, null, 0, "W", 1],["W", 0, "W", "P", "P"],[0, null, 1, "W", "W"],["W", 1, "W", null, 0]];
+// console.log(noMoreMoves(B, false));
+
+
+// const A = [{state: 2}]
+// console.log(A.concat([{state: 3}]));
 export default noMoreMoves;

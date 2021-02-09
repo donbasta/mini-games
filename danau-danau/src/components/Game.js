@@ -18,12 +18,17 @@ class Game extends React.Component {
             isGameOver: 0,
             winner: null,
         };
-        console.log("init", this.state.history[0].squares);
     }
 
     undo() {
+        if (this.state.isGameOver > 0) {
+            return;
+        }
+        if (this.state.stepNumber === 0) {
+            return;
+        }
         this.setState({
-            stepNumber: Math.max(0, this.stepNumber - 1),
+            stepNumber: (this.state.stepNumber - 1),
             firstPlayerTurn: !this.state.firstPlayerTurn,
         })
     }
@@ -51,7 +56,7 @@ class Game extends React.Component {
 
     handleClick(i, j) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
-        const current = history[history.length - 1];
+        const current = JSON.parse(JSON.stringify(history[history.length - 1]));
         const squares = current.squares.slice();
         const firstPlayerTurn = this.state.firstPlayerTurn;
         if (noMoreMoves(squares, firstPlayerTurn) || (squares[i][j] != null)) {
@@ -66,14 +71,15 @@ class Game extends React.Component {
             return;
         }
         squares[i][j] = this.state.firstPlayerTurn ? 0 : 1;
+        this.checkIsGameOver(squares, !firstPlayerTurn);
         this.setState({
-            history: history.concat([{
-                squares: squares,
-            }]),
             stepNumber: history.length,
+            history: [
+                ...history,
+                { squares: squares },
+            ],
             firstPlayerTurn: !this.state.firstPlayerTurn,
         });
-        this.checkIsGameOver(squares, this.state.firstPlayerTurn);
     }
 
     render() {
@@ -98,9 +104,12 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <button onClick={() => this.undo()}>
-                        Undo
-                    </button>
+                    {this.state.isGameOver === 0 ?
+                        <button onClick={() => {this.undo()}}>
+                            Undo
+                        </button>
+                        : null
+                    }
                 </div>
                 {this.state.invalidMove ?
                     <Notification

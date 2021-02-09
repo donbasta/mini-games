@@ -16,7 +16,6 @@ class Board extends React.Component {
 
     render() {
         const squares = this.props.squares;
-        console.log(squares)
         const rows = squares.length;
         const cols = squares[0].length;
         const expandRow = (indexRow) => {
