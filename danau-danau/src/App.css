@@ -1,4 +1,8 @@
-/* .App {
+body {
+  font: 14px "Century Gothic", Futura, sans-serif;
+}
+
+.App {
   text-align: center;
 }
 
@@ -7,15 +11,10 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 20vh;
+  margin: 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,25 +27,15 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
+.play-wrapper {
+  display: inline-block;
+  background-color: #c5d0e6;
+  padding: 1%;
+  color: #282c34;
+  margin: 5%;
+  text-decoration: none;
+}
 
-
-.container {
-  background-image: url(./assets/img/cider-lake.jpg);
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
-  /* background: linear-gradient(black, white); */
+.game-wrapper {
+  margin: 5%;
 }

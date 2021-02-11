@@ -4,15 +4,17 @@ import './App.css';
 
 function App() {
   return (
-    <div>
-      <div className="container">
-        <h1>
-          danau-danau
-        </h1>
+    <div className="App">
+      <header className="App-header">
+        <p>
+          <code>danau-danau</code>
+        </p>
+      </header>
+      <div>
         <BrowserRouter>
           <Switch>
             <Route exact path="/">
-              <div>
+              <div className="play-wrapper">
                 <Link to="/play">Play!</Link>
               </div>
             </Route>
