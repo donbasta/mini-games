@@ -13,7 +13,7 @@ body {
 
 .App-header {
   background-color: #282c34;
-  min-height: 20vh;
+  min-height: 50vh;
   margin: 0px;
   display: flex;
   flex-direction: column;
@@ -25,6 +25,21 @@ body {
 
 .App-link {
   color: #61dafb;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .play-wrapper {
