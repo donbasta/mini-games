@@ -4,6 +4,7 @@ import Notification from './Notification.js';
 import generateBoard from '../utils/generateBoard.js';
 import noMoreMoves from '../utils/noMoreMoves.js';
 import { cannotPickSquareNeighborOpponent, cannotPickSquareNoWaterNeighbor } from '../utils/cannotPickSquare.js';
+import '../styles/Game.css';
 
 class Game extends React.Component {
     constructor(props) {
